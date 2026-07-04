@@ -2,7 +2,7 @@ name: PR Template Selector
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, reopened, synchronize]
 
 permissions:
   pull-requests: write
@@ -68,19 +68,19 @@ jobs:
                         contents: [{
                           parts: [{
                             text: `Você é um desenvolvedor especialista. Preencha o seguinte template de Pull Request em markdown com base no diff do git fornecido abaixo.
-O idioma das respostas deve ser em português do Brasil (assim como o template).
+            O idioma das respostas deve ser em português do Brasil (assim como o template).
 
-Template para preencher:
-${templateContent}
+            Template para preencher:
+            ${templateContent}
 
-Diff do Git:
-${diffContent.slice(0, 40000)}
+            Diff do Git:
+            ${diffContent.slice(0, 40000)}
 
-Regras:
-1. Retorne APENAS o markdown preenchido.
-2. Não adicione outros comentários adicionais, introduções ou blocos de código com crases triplas (\`\`\`) envolvendo o resultado final. O seu output deve começar diretamente com o cabeçalho do template.
-3. Analise o diff e preencha as descrições de forma precisa e técnica.
-4. No checklist do template, marque [x] somente se a modificação correspondente for evidente no diff (ex: se houver testes novos ou build modificado).`
+            Regras:
+            1. Retorne APENAS o markdown preenchido.
+            2. Não adicione outros comentários adicionais, introduções ou blocos de código com crases triplas (tags markdown de código) envolvendo o resultado final. O seu output deve começar diretamente com o cabeçalho do template.
+            3. Analise o diff e preencha as descrições de forma precisa e técnica.
+            4. No checklist do template, marque [x] somente se a modificação correspondente for evidente no diff (ex: se houver testes novos ou build modificado).`
                           }]
                         }]
                       })
