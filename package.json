@@ -1,22 +1,40 @@
 {
+  "name": "gelo",
+  "version": "0.1.0",
   "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "lit": "^3.3.3"
   },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "devDependencies": {
-    "storybook": "^10.4.6",
-    "@storybook/web-components-vite": "^10.4.6",
     "@chromatic-com/storybook": "^5.2.1",
-    "@storybook/addon-vitest": "^10.4.6",
     "@storybook/addon-a11y": "^10.4.6",
     "@storybook/addon-docs": "^10.4.6",
-    "vitest": "^4.1.9",
-    "playwright": "^1.61.1",
+    "@storybook/addon-vitest": "^10.4.6",
+    "@storybook/web-components-vite": "^10.4.6",
+    "@types/node": "^26.1.0",
     "@vitest/browser-playwright": "^4.1.9",
-    "@vitest/coverage-v8": "^4.1.9"
+    "@vitest/coverage-v8": "^4.1.9",
+    "playwright": "^1.61.1",
+    "storybook": "^10.4.6",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
   }
 }

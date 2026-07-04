@@ -1,2 +1,7 @@
 # NodeJS
 /node_modules
+
+# Build outputs
+/dist
+/storybook-static
+

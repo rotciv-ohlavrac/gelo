@@ -1,0 +1,57 @@
+name: PR Template Selector
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  select-template:
+    name: Apply PR Template by Branch Name
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update PR Description
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const branchName = context.payload.pull_request.head.ref;
+            let templatePath = '.github/PULL_REQUEST_TEMPLATE/default.md';
+
+            // Match branch prefix
+            if (branchName.startsWith('feat/') || branchName.startsWith('feature/')) {
+              templatePath = '.github/PULL_REQUEST_TEMPLATE/feature.md';
+            } else if (branchName.startsWith('fix/') || branchName.startsWith('bugfix/')) {
+              templatePath = '.github/PULL_REQUEST_TEMPLATE/bugfix.md';
+            } else if (branchName.startsWith('docs/')) {
+              templatePath = '.github/PULL_REQUEST_TEMPLATE/docs.md';
+            }
+
+            if (fs.existsSync(templatePath)) {
+              const templateContent = fs.readFileSync(templatePath, 'utf8');
+              
+              // Only overwrite if the current description is empty or placeholder
+              const currentBody = context.payload.pull_request.body || '';
+              if (currentBody.trim() === '' || currentBody.trim() === 'No description provided.') {
+                await github.rest.pulls.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: context.payload.pull_request.number,
+                  body: templateContent
+                });
+                console.log(`Successfully applied template: ${templatePath}`);
+              } else {
+                console.log('PR description already exists. Skipping template overwrite.');
+              }
+            } else {
+              console.log(`Template file not found at ${templatePath}`);
+            }
