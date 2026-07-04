@@ -1,0 +1,43 @@
+name: Release to NPM
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: # Allows manual triggering if needed
+
+jobs:
+  publish:
+    name: Validate and Publish to NPM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js (for publishing)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Set up Bun (for fast installation, build and tests)
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright Chromium & system dependencies
+        run: bunx playwright install --with-deps chromium
+
+      - name: Build library
+        run: bun run build
+
+      - name: Run tests
+        run: bun run test
+
+      - name: Publish to NPM
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
